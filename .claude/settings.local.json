@@ -15,5 +15,6 @@
       "Bash(npm install *)",
       "Bash(npx tsc *)"
     ]
-  }
+  },
+  "spinnerTipsEnabled": false
 }

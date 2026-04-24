@@ -3,6 +3,8 @@
 import { Dispatch, useState } from "react";
 import { Action, GameState, Team } from "../hooks/useGameState";
 import { TallyGroup } from "./TallyGroup";
+import CardsHierarchy from "./CardsHierarchy";
+import EnvidoCalculator from "./EnvidoCalculator";
 
 type Props = {
   state: GameState;
@@ -82,6 +84,7 @@ function TeamColumn({
 export default function AnotadorScreen({ state, dispatch }: Props) {
   const { puntos, config } = state;
   const [showHelp, setShowHelp] = useState(false);
+  const [helpTab, setHelpTab] = useState<"general" | "cartas" | "envido">("general");
 
   const metaFloor = Math.floor(config.meta);
   const nosotrosGana = puntos.nosotros >= config.limitePuntos;
@@ -271,12 +274,15 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
           className="absolute inset-0 flex flex-col z-50 animate-fade-in"
           style={{ background: "rgba(10,28,18,0.97)" }}
         >
-          <div className="flex items-center justify-between px-5 pt-6 pb-4">
+          <div className="flex items-center justify-between px-5 pt-6 pb-4 shrink-0">
             <span className="text-[#E8C52A] font-black text-base tracking-[0.2em] uppercase">
               Ayuda Rápida
             </span>
             <button
-              onClick={() => setShowHelp(false)}
+              onClick={() => {
+                setShowHelp(false);
+                setTimeout(() => setHelpTab("general"), 300);
+              }}
               className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold transition-all active:scale-90"
               style={{
                 background: "rgba(232,197,42,0.12)",
@@ -288,38 +294,78 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
               ✕
             </button>
           </div>
-          <div className="h-px mx-5" style={{ background: "rgba(232,197,42,0.15)" }} />
+          
+          <div className="px-5 shrink-0 flex items-center gap-2 pb-3">
+            <button
+              onClick={() => setHelpTab("general")}
+              className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-[0.05em] sm:tracking-[0.1em] uppercase transition-colors ${
+                helpTab === "general"
+                  ? "bg-[#E8C52A] text-[#0A2812]"
+                  : "bg-[#1A5C2A]/40 text-[#E8C52A]/60 border border-[#E8C52A]/20"
+              }`}
+            >
+              General
+            </button>
+            <button
+              onClick={() => setHelpTab("cartas")}
+              className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-[0.05em] sm:tracking-[0.1em] uppercase transition-colors ${
+                helpTab === "cartas"
+                  ? "bg-[#E8C52A] text-[#0A2812]"
+                  : "bg-[#1A5C2A]/40 text-[#E8C52A]/60 border border-[#E8C52A]/20"
+              }`}
+            >
+              Cartas
+            </button>
+            <button
+              onClick={() => setHelpTab("envido")}
+              className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-[0.05em] sm:tracking-[0.1em] uppercase transition-colors ${
+                helpTab === "envido"
+                  ? "bg-[#E8C52A] text-[#0A2812]"
+                  : "bg-[#1A5C2A]/40 text-[#E8C52A]/60 border border-[#E8C52A]/20"
+              }`}
+            >
+              Envido
+            </button>
+          </div>
 
-          <div className="flex-1 flex flex-col gap-6 px-6 pt-6 overflow-y-auto pb-8">
-            <HelpSection title="La cancha">
-              <p className="text-white text-sm leading-relaxed opacity-70">
-                La pantalla está dividida en <strong className="text-white opacity-90">4 cuadrantes</strong>: cada equipo tiene su columna, y dentro de cada columna hay dos zonas — <strong className="text-white opacity-90">Malas</strong> (arriba) y <strong className="text-[#E8C52A]">Buenas</strong> (abajo).
-              </p>
-            </HelpSection>
+          <div className="h-px mx-5 shrink-0" style={{ background: "rgba(232,197,42,0.15)" }} />
 
-            <HelpSection title="Malas y Buenas">
-              <p className="text-white text-sm leading-relaxed opacity-70">
-                Los primeros <strong className="text-white opacity-90">{metaFloor} puntos</strong> son Malas y se llenan en la mitad superior. Al llegar al punto {metaFloor + 1}, los palitos empiezan a aparecer en <strong className="text-[#E8C52A]">Buenas</strong>.
-              </p>
-              <p className="text-white text-sm leading-relaxed opacity-70 pt-1">
-                Cada equipo progresa de forma independiente — uno puede estar en Buenas mientras el otro sigue en Malas.
-              </p>
-            </HelpSection>
+          <div className="flex-1 min-h-0 px-6 pt-6 pb-8 overflow-y-auto no-scrollbar">
+            {helpTab === "general" && (
+              <div className="flex flex-col gap-6">
+                <HelpSection title="La cancha">
+                  <p className="text-white text-sm leading-relaxed opacity-70">
+                    La pantalla está dividida en <strong className="text-white opacity-90">4 cuadrantes</strong>: cada equipo tiene su columna, y dentro de cada columna hay dos zonas — <strong className="text-white opacity-90">Malas</strong> (arriba) y <strong className="text-[#E8C52A]">Buenas</strong> (abajo).
+                  </p>
+                </HelpSection>
 
-            <HelpSection title="Cómo anotar">
-              <p className="text-white text-sm leading-relaxed opacity-70">
-                Tocá en cualquier parte de la columna de tu equipo para sumar 1 punto. Usá el botón <strong className="text-white opacity-90">−</strong> en la barra inferior para corregir.
-              </p>
-            </HelpSection>
+                <HelpSection title="Malas y Buenas">
+                  <p className="text-white text-sm leading-relaxed opacity-70">
+                    Los primeros <strong className="text-white opacity-90">{metaFloor} puntos</strong> son Malas y se llenan en la mitad superior. Al llegar al punto {metaFloor + 1}, los palitos empiezan a aparecer en <strong className="text-[#E8C52A]">Buenas</strong>.
+                  </p>
+                  <p className="text-white text-sm leading-relaxed opacity-70 pt-1">
+                    Cada equipo progresa de forma independiente — uno puede estar en Buenas mientras el otro sigue en Malas.
+                  </p>
+                </HelpSection>
 
-            <HelpSection title="Los palitos">
-              <div className="flex items-center gap-4 pt-1">
-                <div className="text-[#E8C52A] w-16">
-                  <TallyGroup count={5} className="w-full h-auto" />
-                </div>
-                <span className="text-white text-sm opacity-60">= 5 puntos</span>
+                <HelpSection title="Cómo anotar">
+                  <p className="text-white text-sm leading-relaxed opacity-70">
+                    Tocá en cualquier parte de la columna de tu equipo para sumar 1 punto. Usá el botón <strong className="text-white opacity-90">−</strong> en la barra inferior para corregir.
+                  </p>
+                </HelpSection>
+
+                <HelpSection title="Los palitos">
+                  <div className="flex items-center gap-4 pt-1">
+                    <div className="text-[#E8C52A] w-16">
+                      <TallyGroup count={5} className="w-full h-auto" />
+                    </div>
+                    <span className="text-white text-sm opacity-60">= 5 puntos</span>
+                  </div>
+                </HelpSection>
               </div>
-            </HelpSection>
+            )}
+            {helpTab === "cartas" && <CardsHierarchy />}
+            {helpTab === "envido" && <EnvidoCalculator />}
           </div>
         </div>
       )}
