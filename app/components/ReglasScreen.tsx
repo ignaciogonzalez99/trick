@@ -17,7 +17,10 @@ export default function ReglasScreen({ dispatch }: Props) {
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-8 pb-4">
+      <div
+        className="flex items-center justify-between px-5 pb-4"
+        style={{ paddingTop: "max(24px, calc(env(safe-area-inset-top, 0px) + 12px))" }}
+      >
         <button
           onClick={() => dispatch({ type: "RESET" })}
           className="flex items-center gap-2 font-bold text-sm tracking-widest uppercase transition-opacity active:opacity-60"

@@ -49,38 +49,38 @@ export default function HomeScreen({
           />
 
           {/* App title */}
-          <div className="absolute top-5 left-0 right-0 flex flex-col items-center gap-1.5">
-            <div className="flex items-center gap-2.5">
-              <ShieldIcon className="w-6 h-6 text-[#1A5C2A]" />
-              <span className="text-[#1A5C2A] font-black tracking-[0.28em] text-base uppercase">
+          <div className="absolute top-3 left-0 right-0 flex flex-col items-center gap-1.5">
+            <div className="flex items-center gap-2">
+              <ShieldIcon className="w-5 h-5 text-[#1A5C2A]" />
+              <span className="text-[#1A5C2A] font-black tracking-[0.22em] text-sm uppercase">
                 REALENVIDO
               </span>
               <ShieldIcon
-                className="w-6 h-6 text-[#1A5C2A]"
+                className="w-5 h-5 text-[#1A5C2A]"
                 style={{ transform: "scaleX(-1)" }}
               />
             </div>
-            <div className="h-[1.5px] w-36 rounded-full bg-[#1A5C2A] opacity-25" />
+            <div className="h-[1.5px] w-28 rounded-full bg-[#1A5C2A] opacity-25" />
           </div>
 
-          <div className="flex flex-col items-center gap-4 mt-8">
+          <div className="flex flex-col items-center gap-3 mt-5">
             <div
-              className="w-28 h-28 flex items-center justify-center rounded-full"
+              className="w-24 h-24 flex items-center justify-center rounded-full"
               style={{
                 background: "rgba(26,92,42,0.08)",
                 boxShadow: "0 4px 24px rgba(26,92,42,0.12)",
               }}
             >
-              <BookIcon className="w-16 h-16 text-[#1A5C2A]" />
+              <BookIcon className="w-14 h-14 text-[#1A5C2A]" />
             </div>
             <div className="flex flex-col items-center gap-1">
               <span
-                className="text-[#1A5C2A] font-black text-5xl tracking-[0.18em] uppercase"
+                className="text-[#1A5C2A] font-black text-4xl tracking-[0.15em] uppercase"
                 style={{ textShadow: "0 2px 10px rgba(26,92,42,0.18)" }}
               >
                 REGLAS
               </span>
-              <span className="text-[#1A5C2A] text-xs font-semibold opacity-60 tracking-[0.25em] uppercase">
+              <span className="text-[#1A5C2A] text-xs font-semibold opacity-60 tracking-[0.22em] uppercase">
                 Aprendé a jugar
               </span>
             </div>
@@ -126,30 +126,30 @@ export default function HomeScreen({
             }}
           />
 
-          <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="flex flex-col items-center gap-3 mb-5">
             <div
-              className="w-28 h-28 flex items-center justify-center rounded-full"
+              className="w-24 h-24 flex items-center justify-center rounded-full"
               style={{
                 background: "rgba(232,197,42,0.1)",
                 boxShadow: "0 4px 24px rgba(0,0,0,0.25)",
               }}
             >
-              <NotepadIcon className="w-16 h-16 text-[#E8C52A]" />
+              <NotepadIcon className="w-14 h-14 text-[#E8C52A]" />
             </div>
             <div className="flex flex-col items-center gap-1">
               <span
-                className="text-[#E8C52A] font-black text-5xl tracking-[0.12em] uppercase"
+                className="text-[#E8C52A] font-black text-4xl tracking-[0.1em] uppercase"
                 style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
               >
                 ANOTADOR
               </span>
-              <span className="text-[#E8C52A] text-xs font-semibold opacity-60 tracking-[0.25em] uppercase">
+              <span className="text-[#E8C52A] text-xs font-semibold opacity-60 tracking-[0.22em] uppercase">
                 Llevá el marcador
               </span>
             </div>
           </div>
 
-          <div className="absolute bottom-5 flex items-center gap-2 opacity-30">
+          <div className="absolute bottom-3 flex items-center gap-2 opacity-30">
             <div className="h-px w-8 bg-[#E8C52A]" />
             <span className="text-[#E8C52A] text-[9px] tracking-[0.4em] uppercase font-bold">
               RealEnvido

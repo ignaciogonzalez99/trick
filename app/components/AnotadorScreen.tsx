@@ -108,7 +108,10 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
       style={{ background: "linear-gradient(180deg, #0F2A1A 0%, #1A5C2A 100%)" }}
     >
       {/* ── Top bar ── */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
+      <div
+        className="flex items-center justify-between px-4 pb-2 shrink-0"
+        style={{ paddingTop: "max(16px, env(safe-area-inset-top, 0px))" }}
+      >
         <span className="text-[#E8C52A] font-black text-xs tracking-[0.3em] uppercase opacity-60">
           REALENVIDO
         </span>
@@ -220,7 +223,14 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
       </div>
 
       {/* ── Bottom controls: score + subtract ── */}
-      <div className="flex shrink-0 py-3 px-2" style={{ borderTop: "1px solid rgba(232,197,42,0.1)" }}>
+      <div
+        className="flex shrink-0 px-2"
+        style={{
+          borderTop: "1px solid rgba(232,197,42,0.1)",
+          paddingTop: "12px",
+          paddingBottom: "max(12px, env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         {/* NOSOTROS controls */}
         <div className="flex-1 flex items-center justify-center gap-3">
           <span

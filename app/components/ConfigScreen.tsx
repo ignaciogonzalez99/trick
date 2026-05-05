@@ -33,13 +33,16 @@ export default function ConfigScreen({ state, dispatch }: Props) {
 
   return (
     <div
-      className="animate-fade-in flex flex-col h-full w-full max-w-md mx-auto px-6 py-10 gap-8"
+      className="animate-fade-in flex flex-col h-full w-full max-w-md mx-auto px-5 py-6 gap-5"
       style={{
         background: "linear-gradient(180deg, #122A1C 0%, #1A5C2A 50%, #2A7A3A 100%)",
       }}
     >
       {/* Header */}
-      <div className="flex flex-col items-center gap-1 pt-4">
+      <div
+        className="flex flex-col items-center gap-1"
+        style={{ paddingTop: "max(8px, env(safe-area-inset-top, 0px))" }}
+      >
         <span className="text-[#E8C52A] font-black text-2xl tracking-[0.3em] uppercase">
           CONFIGURAR
         </span>
@@ -56,7 +59,7 @@ export default function ConfigScreen({ state, dispatch }: Props) {
             <button
               key={n}
               onClick={() => dispatch({ type: "SET_JUGADORES", payload: n })}
-              className="flex-1 py-4 rounded-xl font-black text-3xl transition-all duration-150"
+              className="flex-1 py-3 rounded-xl font-black text-2xl transition-all duration-150"
               style={{
                 border: jugadores === n ? "2px solid #E8C52A" : "2px solid rgba(232,197,42,0.2)",
                 background: jugadores === n ? "rgba(232,197,42,0.15)" : "rgba(255,255,255,0.04)",
@@ -82,7 +85,7 @@ export default function ConfigScreen({ state, dispatch }: Props) {
               <button
                 key={n}
                 onClick={() => handlePresetClick(n)}
-                className="flex-1 min-w-[48px] py-3 rounded-xl font-black text-xl transition-all duration-150"
+                className="flex-1 min-w-[44px] py-2.5 rounded-xl font-black text-lg transition-all duration-150"
                 style={{
                   border: active ? "2px solid #E8C52A" : "2px solid rgba(232,197,42,0.2)",
                   background: active ? "rgba(232,197,42,0.15)" : "rgba(255,255,255,0.04)",
@@ -130,7 +133,7 @@ export default function ConfigScreen({ state, dispatch }: Props) {
       <div className="mt-auto">
         <button
           onClick={() => dispatch({ type: "START_GAME" })}
-          className="w-full py-5 rounded-2xl font-black text-2xl tracking-[0.25em] uppercase transition-all duration-150 active:scale-[0.97]"
+          className="w-full py-4 rounded-2xl font-black text-xl tracking-[0.25em] uppercase transition-all duration-150 active:scale-[0.97]"
           style={{
             background: "linear-gradient(135deg, #C8A800 0%, #E8C52A 50%, #F2D64A 100%)",
             color: "#1A5C2A",
