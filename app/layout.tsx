@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${geist.variable} h-dvh`}>
-      <body className="h-dvh overflow-hidden">{children}</body>
+    <html lang="es" className={`${geist.variable} h-dvh`} suppressHydrationWarning>
+      <body className="h-dvh overflow-hidden bg-[#0F2A1A]">{children}</body>
     </html>
   );
 }
