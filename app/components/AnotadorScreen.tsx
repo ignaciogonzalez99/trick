@@ -11,7 +11,7 @@ type Props = {
   dispatch: Dispatch<Action>;
 };
 
-function TallySection({
+function TallyPanel({
   points,
   color,
   dim,
@@ -24,7 +24,7 @@ function TallySection({
   const remainder = points % 5;
 
   return (
-    <div className="relative p-2 pb-1" style={{ flex: "1 0 50%" }}>
+    <div className="relative min-h-full p-2 pb-1">
       {/* Tally grid */}
       <div
         className="grid grid-cols-2 gap-1 pt-2"
@@ -39,18 +39,40 @@ function TallySection({
   );
 }
 
-function TeamColumn({
+function TeamScoreCell({
   team,
-  puntos,
-  meta,
-  limite,
+  points,
+  color,
+  dim,
+  disabled,
   dispatch,
 }: {
   team: Team;
+  points: number;
+  color: string;
+  dim?: boolean;
+  disabled: boolean;
+  dispatch: Dispatch<Action>;
+}) {
+  return (
+    <button
+      className="relative min-h-full flex-1 cursor-pointer select-none"
+      onClick={() => !disabled && dispatch({ type: "ADD_POINT", team })}
+      aria-label={`Sumar punto a ${team}`}
+    >
+      <TallyPanel points={points} color={color} dim={dim} />
+    </button>
+  );
+}
+
+function getTeamScoreParts({
+  puntos,
+  meta,
+  limite,
+}: {
   puntos: number;
   meta: number;
   limite: number;
-  dispatch: Dispatch<Action>;
 }) {
   const metaFloor = Math.floor(meta);
   const esGanador = puntos >= limite;
@@ -59,26 +81,7 @@ function TeamColumn({
   const malasPoints = Math.min(puntos, metaFloor);
   const buenasPoints = Math.max(0, puntos - metaFloor);
 
-  return (
-    <button
-      className="relative flex flex-col flex-1 min-h-full cursor-pointer select-none"
-      onClick={() => !esGanador && dispatch({ type: "ADD_POINT", team })}
-      aria-label={`Sumar punto a ${team}`}
-    >
-      {/* MALAS section (top half) */}
-      <TallySection
-        points={malasPoints}
-        color="rgba(255,255,255,0.9)"
-        dim={esBuenas && !esGanador}
-      />
-
-      {/* BUENAS section (bottom half) */}
-      <TallySection
-        points={buenasPoints}
-        color={esGanador ? "#4ade80" : "#E8C52A"}
-      />
-    </button>
-  );
+  return { malasPoints, buenasPoints, esBuenas, esGanador };
 }
 
 export default function AnotadorScreen({ state, dispatch }: Props) {
@@ -89,6 +92,16 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
   const metaFloor = Math.floor(config.meta);
   const nosotrosGana = puntos.nosotros >= config.limitePuntos;
   const ellosGanan = puntos.ellos >= config.limitePuntos;
+  const nosotrosScore = getTeamScoreParts({
+    puntos: puntos.nosotros,
+    meta: config.meta,
+    limite: config.limitePuntos,
+  });
+  const ellosScore = getTeamScoreParts({
+    puntos: puntos.ellos,
+    meta: config.meta,
+    limite: config.limitePuntos,
+  });
 
   function statusLabel(pts: number, gana: boolean, team: "nos" | "ell") {
     if (gana) return team === "nos" ? "¡GANAMOS!" : "¡GANARON!";
@@ -178,47 +191,66 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
       {/* ── Main 4-quadrant scoring area ── */}
       <div className="flex-1 min-h-0 relative">
 
-        {/* Horizontal divider: anchored to viewport midpoint, no scroll */}
-        <div
-          className="absolute left-0 right-0 pointer-events-none z-20"
-          style={{
-            top: "50%",
-            height: "1.5px",
-            transform: "translateY(-50%)",
-            background: "linear-gradient(to right, rgba(232,197,42,0.08), rgba(232,197,42,0.35) 20%, rgba(232,197,42,0.35) 80%, rgba(232,197,42,0.08))",
-          }}
-        />
-
         {/* Single scroll container for all tally content */}
-        <div className="absolute inset-0 flex items-start overflow-y-auto no-scrollbar">
+        <div className="absolute inset-0 overflow-y-auto no-scrollbar">
 
-          {/* NOSOTROS column */}
-          <TeamColumn
-            team="nosotros"
-            puntos={puntos.nosotros}
-            meta={config.meta}
-            limite={config.limitePuntos}
-            dispatch={dispatch}
-          />
+          <div className="relative flex min-h-full flex-col">
+            <div
+              className="pointer-events-none absolute top-2 bottom-2 left-1/2 z-20 -translate-x-1/2"
+              style={{
+                width: "1.5px",
+                background: "linear-gradient(to bottom, rgba(232,197,42,0.08), rgba(232,197,42,0.3) 20%, rgba(232,197,42,0.3) 80%, rgba(232,197,42,0.08))",
+              }}
+            />
 
-          {/* Vertical divider */}
-          <div
-            className="shrink-0 my-2 z-20"
-            style={{
-              width: "1.5px",
-              alignSelf: "stretch",
-              background: "linear-gradient(to bottom, rgba(232,197,42,0.08), rgba(232,197,42,0.3) 20%, rgba(232,197,42,0.3) 80%, rgba(232,197,42,0.08))",
-            }}
-          />
+            {/* MALAS row: defaults to half the board, grows when tallies need room */}
+            <div className="flex min-h-[50%] shrink-0">
+              <TeamScoreCell
+                team="nosotros"
+                points={nosotrosScore.malasPoints}
+                color="rgba(255,255,255,0.9)"
+                dim={nosotrosScore.esBuenas && !nosotrosScore.esGanador}
+                disabled={nosotrosScore.esGanador}
+                dispatch={dispatch}
+              />
+              <div className="w-[1.5px] shrink-0" />
+              <TeamScoreCell
+                team="ellos"
+                points={ellosScore.malasPoints}
+                color="rgba(255,255,255,0.9)"
+                dim={ellosScore.esBuenas && !ellosScore.esGanador}
+                disabled={ellosScore.esGanador}
+                dispatch={dispatch}
+              />
+            </div>
 
-          {/* ELLOS column */}
-          <TeamColumn
-            team="ellos"
-            puntos={puntos.ellos}
-            meta={config.meta}
-            limite={config.limitePuntos}
-            dispatch={dispatch}
-          />
+            {/* Horizontal divider: follows the MALAS row when it grows */}
+            <div
+              className="pointer-events-none z-20 h-[1.5px] shrink-0"
+              style={{
+                background: "linear-gradient(to right, rgba(232,197,42,0.08), rgba(232,197,42,0.35) 20%, rgba(232,197,42,0.35) 80%, rgba(232,197,42,0.08))",
+              }}
+            />
+
+            {/* BUENAS row */}
+            <div className="flex min-h-[50%] flex-1">
+              <TeamScoreCell
+                team="nosotros"
+                points={nosotrosScore.buenasPoints}
+                color={nosotrosScore.esGanador ? "#4ade80" : "#E8C52A"}
+                disabled={nosotrosScore.esGanador}
+                dispatch={dispatch}
+              />
+              <div className="w-[1.5px] shrink-0" />
+              <TeamScoreCell
+                team="ellos"
+                points={ellosScore.buenasPoints}
+                color={ellosScore.esGanador ? "#4ade80" : "#E8C52A"}
+                disabled={ellosScore.esGanador}
+                dispatch={dispatch}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
