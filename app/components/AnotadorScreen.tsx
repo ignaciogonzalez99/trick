@@ -11,6 +11,8 @@ type Props = {
   dispatch: Dispatch<Action>;
 };
 
+const MIN_TALLY_SECTION_HEIGHT = "max(50%, 15.5rem)";
+
 function TallyPanel({
   points,
   color,
@@ -203,8 +205,8 @@ export default function AnotadorScreen({ state, dispatch }: Props) {
               }}
             />
 
-            {/* MALAS row: defaults to half the board, grows when tallies need room */}
-            <div className="flex min-h-[50%] shrink-0">
+            {/* MALAS row: starts with room for two tally rows, then grows as needed */}
+            <div className="flex shrink-0" style={{ minHeight: MIN_TALLY_SECTION_HEIGHT }}>
               <TeamScoreCell
                 team="nosotros"
                 points={nosotrosScore.malasPoints}
